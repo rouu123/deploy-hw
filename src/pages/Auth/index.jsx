@@ -34,6 +34,7 @@ export const Auth = () => {
 			<p>Sign in with google to continue</p>
 			<button onClick={signInWithGoogle}>Sign In With Google</button>
 			<h2>deployed by roua</h2>
+			<h3>added CI/CD</h3>
 		</div>
 	);
 };
