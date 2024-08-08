@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-
+import { useEffect, useState, useCallback } from 'react';
 import {
 	collection,
 	onSnapshot,
@@ -8,7 +7,6 @@ import {
 	where,
 } from 'firebase/firestore';
 import { db } from '../config/fireabase';
-
 import { useGetUserInfo } from './useGetUserInfo';
 
 export const useGetTransactions = () => {
@@ -19,14 +17,14 @@ export const useGetTransactions = () => {
 		balance: 0,
 	});
 
-	const tansactionsColRef = collection(db, 'transactions');
+	const transactionsColRef = collection(db, 'transactions');
 	const { userID } = useGetUserInfo();
 
-	const getTransactions = async () => {
+	const getTransactions = useCallback(async () => {
 		let unsub;
 		try {
 			const transQuery = query(
-				tansactionsColRef,
+				transactionsColRef,
 				where('userID', '==', userID),
 				orderBy('createdAt')
 			);
@@ -60,11 +58,11 @@ export const useGetTransactions = () => {
 		}
 
 		return () => unsub();
-	};
+	}, [userID, transactionsColRef]);
 
 	useEffect(() => {
 		getTransactions();
-	}, []);
+	}, [getTransactions]);
 
 	return { transactions, transactionsTotal };
 };
